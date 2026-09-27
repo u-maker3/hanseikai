@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>反省会、閉店。</title>
+<style>
+:root{--bg:#fff7ef;--card:#fff;--text:#403833;--sub:#7c7068;--pink:#e99091;--brown:#765b4c;--cream:#fff0dc;--line:#eaded4}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;background:radial-gradient(circle at top,#fffdf8 0%,var(--bg) 60%);color:var(--text);min-height:100vh}
+.app{width:min(100%,500px);margin:auto;min-height:100vh;padding:18px 16px 35px}
+.screen{display:none;animation:fade .45s ease}.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{width:100%;border-radius:24px;display:block;box-shadow:0 10px 30px rgba(80,50,40,.12);margin-bottom:20px}
+.card{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:24px;padding:22px 18px;box-shadow:0 8px 25px rgba(90,60,45,.07)}
+h1{text-align:center;font-size:30px;margin:5px 0 10px}h2{font-size:23px;margin:0 0 12px;line-height:1.45}
+p{line-height:1.8;margin:8px 0}.small{color:var(--sub);font-size:13px}.center{text-align:center}
+textarea,input[type="text"]{width:100%;border:2px solid var(--line);background:#fffdfb;border-radius:16px;padding:15px;font-size:16px;color:var(--text);outline:none;margin:12px 0;font-family:inherit}
+textarea{min-height:150px;resize:vertical}textarea:focus,input:focus{border-color:#e6aaa8}
+button{width:100%;border:0;border-radius:18px;padding:16px 12px;margin-top:11px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
+button:active{transform:scale(.98)}.primary{background:var(--pink);color:#fff;box-shadow:0 6px 16px rgba(201,104,108,.22)}
+.secondary{background:var(--cream);color:var(--brown)}.dark{background:var(--brown);color:#fff}
+.choice{background:#fff;color:var(--text);border:2px solid var(--line);text-align:left}
+.progress{display:flex;justify-content:center;gap:7px;margin:5px 0 18px}.dot{width:8px;height:8px;border-radius:50%;background:#e6d8cf}.dot.on{background:var(--pink)}
+.quote{margin:18px 0 5px;padding:17px;background:#fff7ef;border-radius:17px;font-weight:700;line-height:1.8}
+.trash-paper{background:#fff;border:2px dashed #d8c6b9;padding:18px;margin:15px 0;border-radius:14px;line-height:1.7;overflow-wrap:anywhere;transition:all .7s ease}
+.trash-paper.throw{opacity:0;transform:translateY(120px) scale(.1) rotate(25deg)}
+.trash-result{display:none;text-align:center;padding:18px;font-size:20px;font-weight:bold}
+.big-close{font-size:42px;font-weight:900;letter-spacing:.15em;text-align:center;margin:18px 0;color:var(--brown)}
+.closed-comment{background:#fff5e8;border-radius:20px;padding:20px;font-size:18px;font-weight:700;line-height:1.8;text-align:center;margin:18px 0}
+.notice{margin-top:18px;font-size:12px;line-height:1.7;color:#8a7d75;text-align:center}
+.tag{display:inline-block;background:#fff0dc;border-radius:999px;padding:5px 12px;font-size:12px;margin-bottom:8px;color:#856757}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="screen active" id="screen1">
+<img src="hanseikai01.PNG" class="hero" alt="ひとり反省会をしているうめこ">
+<div class="card center"><span class="tag">本日の脳内会議</span><h1>反省会、閉店。</h1>
+<p>また始まってませんか。<br><strong>ひとり反省会。</strong></p>
+<p>誰かに聞いてほしい。<br>でも連絡するほどでもない。</p>
+<p>ほな、ここで一回<br><strong>頭ん中から出してしまお。</strong></p>
+<button class="primary" onclick="go(2)">始めてしまった🤣</button>
+<p class="notice">入力した内容は保存しません。<br>このページを閉じれば消えます。</p></div></section>
+
+<section class="screen" id="screen2"><div class="progress"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<img src="hanseikai02.PNG" class="hero" alt="話を聞くうめこ"><div class="card"><h2>ほな、何があったん？</h2>
+<p>文章まとまってなくてええ。<br>誰にも見せへんから、そのまま書き。</p>
+<textarea id="worry" placeholder="今日な……" maxlength="2000"></textarea><p class="small">※ここでは正解もオチもいりません。</p>
+<button class="primary" onclick="saveWorry()">とりあえず吐いた</button></div></section>
+
+<section class="screen" id="screen3"><div class="progress"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+<img src="hanseikai03.PNG" class="hero" alt="頭の中で考えがぐるぐるしているうめこ"><div class="card"><h2>で、それ何周目？🤣</h2>
+<p>同じ場面、脳内で再放送してへん？</p>
+<button class="choice" onclick="selectReplay('初回')">🐾 まだ初回放送</button>
+<button class="choice" onclick="selectReplay('3周')">🔁 たぶん3周くらい</button>
+<button class="choice" onclick="selectReplay('エンドレス')">🌀 もうエンドレス再放送</button>
+<button class="choice" onclick="selectReplay('知らん')">🤣 何周したか知らん</button></div></section>
+
+<section class="screen" id="screen4"><div class="progress"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div>
+<div class="card"><h2>ほな、ひとつだけ確認。</h2><p>その件、<br><strong>今から何とかできることある？</strong></p>
+<button class="primary" onclick="go(5)">ある。明日やること決める</button>
+<button class="secondary" onclick="cannotDo()">今日はもう、どうにもならん</button></div></section>
+
+<section class="screen" id="screen5"><div class="card"><h2>ほな、1個だけ。</h2>
+<p>10個も反省せんでええ🤣<br>明日の自分に渡す仕事は<strong>1個だけ。</strong></p>
+<input id="tomorrow" type="text" maxlength="150" placeholder="明日これだけやる">
+<button class="primary" onclick="saveTomorrow()">明日の自分に引き継ぐ</button></div></section>
+
+<section class="screen" id="screen6"><div class="progress"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div>
+<img src="hanseikai04.PNG" class="hero" alt="モヤモヤを捨てるうめこ"><div class="card"><h2>ここまで考えた。もうええ。</h2>
+<p>このモヤモヤ、<br><strong>本日の営業とともに破棄しますか？</strong></p>
+<div class="trash-paper" id="trashPaper"></div>
+<button class="dark" id="trashButton" onclick="throwAway()">🗑️ 破棄する</button>
+<div class="trash-result" id="trashResult">🗑️ 処分完了。<br><br>持って帰らんでよろしい。</div></div></section>
+
+<section class="screen" id="screen7"><img src="hanseikai05.PNG" class="hero" alt="反省会を閉店するうめこ">
+<div class="card"><p class="center">本日の反省会</p><div class="big-close">閉 店</div>
+<div class="closed-comment" id="closedComment"></div><div id="tomorrowBox"></div>
+<button class="dark" onclick="finish()">本日の担当者、退勤する🤣</button>
+<button class="secondary" onclick="closedAgain()">……でも、もうちょっと考える</button>
+<div id="againMessage" class="quote center" style="display:none">閉店言うたやろ🤣</div>
+<p class="notice">このアプリは気持ちを書き出して整理するためのものです。<br>医療・診断・治療を目的としたものではありません。<br>つらさが強いときや、自分だけで抱えるのが難しいときは、信頼できる人や専門の相談先につながってください。</p>
+</div></section>
+</main>
+<script>
+let worryText="",replayLevel="",tomorrowTask="";
+function go(n){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById("screen"+n).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function saveWorry(){const v=document.getElementById("worry").value.trim();if(!v){alert("なんも書いてへんで🤣\n\n一言でもええから置いていき。");return}worryText=v;go(3)}
+function selectReplay(v){replayLevel=v;go(4)}
+function cannotDo(){tomorrowTask="";prepareTrash();go(6)}
+function saveTomorrow(){const v=document.getElementById("tomorrow").value.trim();if(!v){alert("明日の自分に渡す仕事、1個だけ書いてな🤣");return}tomorrowTask=v;prepareTrash();go(6)}
+function prepareTrash(){const p=document.getElementById("trashPaper");p.classList.remove("throw");p.textContent=worryText;document.getElementById("trashResult").style.display="none";document.getElementById("trashButton").style.display="block"}
+function throwAway(){const p=document.getElementById("trashPaper"),b=document.getElementById("trashButton");p.classList.add("throw");b.style.display="none";setTimeout(()=>{worryText="";p.textContent="";document.getElementById("trashResult").style.display="block"},650);setTimeout(()=>{prepareClosing();go(7)},1900)}
+function prepareClosing(){
+let comments=["それ以上考えても、新証拠は出ません🤣","夜中の脳みそに重要案件を審議させるな。","相手の脳内まで勝手に脚本書くな🤣","今日のあんたは、もう十分考えました。","反省と、自分いじめは別モンやで。","本日の担当者は退勤しました。続きは明日。","今わからんことは、今わからんままでええ。","考えた。悩んだ。はい終了🤣","今日のあんたにできることは、もうやった。","脳内会議、長引かせても残業代出ません🤣"];
+if(replayLevel==="エンドレス"||replayLevel==="知らん")comments=comments.concat(["再放送しすぎ🤣 そろそろ最終回にしよ。","同じ場面を何周しても、新しい映像は追加されません🤣","脳内ロードショー、本日の上映は終了しました。","そこまで考えたら十分。もう閉館🤣"]);
+document.getElementById("closedComment").textContent=comments[Math.floor(Math.random()*comments.length)];
+document.getElementById("tomorrowBox").innerHTML=tomorrowTask?`<div class="quote">📮 明日の自分への引き継ぎ<br><br>${escapeHTML(tomorrowTask)}<br><br><span class="small">これ1個でええ。議題増やすな🤣</span></div>`:`<div class="quote center">📭 明日への引き継ぎ事項なし。<br>本日はこれにて終了。</div>`;
+document.getElementById("againMessage").style.display="none"}
+function closedAgain(){const b=document.getElementById("againMessage");b.style.display="block";b.innerHTML="閉店言うたやろ🤣<br><br>その議題、今日はもう受付終了です。";b.scrollIntoView({behavior:"smooth",block:"center"})}
+function finish(){const m=["おつかれさん。今日はもう自由時間や🤣","はい退勤。脳みそもタイムカード押しとき。","本日の反省係、勤務終了です。","よく考えました。ほな今日はここまで。"];alert(m[Math.floor(Math.random()*m.length)])}
+function escapeHTML(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+</script>
+</body>
+</html>
