@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>反省会、閉店。</title>
+<style>
+:root{--bg:#fff7ef;--card:#fff;--text:#403833;--sub:#7c7068;--pink:#e99091;--brown:#765b4c;--cream:#fff0dc;--line:#eaded4}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;background:radial-gradient(circle at top,#fffdf8,var(--bg));color:var(--text);min-height:100vh}
+.app{width:min(100%,500px);margin:auto;padding:18px 16px 40px}.screen{display:none;animation:fade .35s ease}.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.hero{
+  width:min(72%,330px);
+  height:auto;
+  object-fit:contain;
+  display:block;
+  margin:0 auto 18px;
+  border-radius:24px;
+  box-shadow:0 10px 28px #6b49301c;
+  animation:heroPop .55s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes heroPop{
+  0%{opacity:0;transform:scale(.88) rotate(-2deg)}
+  70%{transform:scale(1.03) rotate(1deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+.shake{animation:shake .42s ease}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-7px) rotate(-1deg)}
+  50%{transform:translateX(7px) rotate(1deg)}
+  75%{transform:translateX(-4px)}
+}
+.stamp{animation:stamp .55s cubic-bezier(.2,.9,.2,1)}
+@keyframes stamp{
+  0%{opacity:0;transform:scale(2.2) rotate(-10deg)}
+  65%{opacity:1;transform:scale(.88) rotate(3deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+@media(max-width:380px){.hero{width:78%;}}.card{background:#fffffff5;border:1px solid var(--line);border-radius:24px;padding:21px 18px;box-shadow:0 8px 24px #5a3c2d12}
+h1{text-align:center;font-size:30px;margin:6px 0 10px}h2{font-size:23px;line-height:1.5;margin:0 0 10px}p{line-height:1.8}.center{text-align:center}.small{font-size:12px;color:var(--sub)}
+button{width:100%;border:0;border-radius:18px;padding:15px 12px;margin-top:10px;font:700 16px inherit;cursor:pointer}.primary{background:var(--pink);color:#fff}.secondary{background:var(--cream);color:var(--brown)}.dark{background:var(--brown);color:#fff}.choice{background:#fff;border:2px solid var(--line);color:var(--text);text-align:left}
+textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border-radius:16px;padding:14px;font:16px inherit;color:var(--text);outline:none;margin:10px 0}textarea{min-height:120px;resize:vertical}
+.prompt{background:#fff7ef;border-radius:18px;padding:16px;margin:14px 0;line-height:1.8}.summary{background:#fffaf3;border:2px solid #efdfcf;border-radius:20px;padding:17px;margin:15px 0;line-height:1.75}.label{font-size:12px;font-weight:800;color:#a16f68;margin-bottom:4px}.answer{font-weight:700;overflow-wrap:anywhere;margin-bottom:13px}
+.trash-paper{background:#fff;border:2px dashed #d8c6b9;padding:17px;border-radius:14px;line-height:1.7;transition:.65s;margin:14px 0}.trash-paper.throw{opacity:0;transform:translateY(110px) scale(.1) rotate(20deg)}
+.big{font-size:42px;font-weight:900;letter-spacing:.15em;text-align:center;color:var(--brown);margin:12px 0}.quote{background:#fff5e8;border-radius:18px;padding:18px;margin:15px 0;line-height:1.8;font-weight:700}.notice{font-size:12px;color:#897c73;text-align:center;line-height:1.7;margin-top:18px}
+
+.timer{
+  font-size:44px;font-weight:900;text-align:center;color:var(--brown);
+  margin:8px 0;letter-spacing:.04em
+}
+.meter{display:flex;gap:8px;margin:12px 0}
+.meter button{text-align:center;padding:13px 5px;font-size:14px}
+.bubble{
+  background:#fff0dc;border-radius:18px 18px 18px 5px;
+  padding:14px 16px;margin:12px 0;font-weight:700;line-height:1.7
+}
+.counter{text-align:center;font-size:13px;color:var(--sub);margin:8px 0}
+</style>
+</head>
+<body><main class="app">
+
+<section class="screen active" id="s1">
+<img class="hero" src="hanseikai01.PNG">
+<div class="card center">
+<div class="small">🧠 本日の脳内会議所</div>
+<h1>反省会、閉店。</h1>
+<p>誰かに話したい。<br>でも誰に話したらええねん。</p>
+<p><strong>ほな、ここで吐いていき。</strong></p>
+<p>今日は分析せん。説教せん。<br>とりあえず聞く🤣</p>
+<button class="primary" onclick="go(2)">ちょっと聞いて</button>
+<p class="notice">入力内容は保存しません。ページを閉じる・再読み込みすると消えます。</p>
+</div></section>
+
+<section class="screen" id="s2">
+<img class="hero" src="hanseikai02.PNG">
+<div class="card">
+<h2>今どんな感じ？</h2>
+<p>説明せんでええ。近いやつ押して。</p>
+<button class="choice" onclick="mood('😡 腹立つ')">😡 腹立つ</button>
+<button class="choice" onclick="mood('😭 悲しい')">😭 悲しい</button>
+<button class="choice" onclick="mood('😰 不安')">😰 不安</button>
+<button class="choice" onclick="mood('😣 やらかした')">😣 やらかした</button>
+<button class="choice" onclick="mood('😵 ごちゃごちゃ')">😵 ごちゃごちゃ</button>
+<button class="choice" onclick="mood('🤬 知らん！全部！')">🤬 知らん！全部！</button>
+</div></section>
+
+<section class="screen" id="s3">
+<img class="hero" src="hanseikai02.PNG">
+<div class="card">
+<h2>ほな30秒、全部言え🤣</h2>
+<div class="bubble" id="listenBubble">悪口でも愚痴でも言い訳でもええ。<br>本日は品行方正、禁止。</div>
+<div class="timer" id="timer">30</div>
+<textarea id="vent" maxlength="3000" placeholder="ほんまな！！！"></textarea>
+<button class="primary" onclick="finishVent()">吐いた</button>
+<div class="counter" id="roundText">愚痴タイム 1回目</div>
+</div></section>
+
+<section class="screen" id="s4">
+<img class="hero" src="hanseikai03.PNG">
+<div class="card center">
+<h2>……まだある？🤣</h2>
+<div class="bubble" id="reaction"></div>
+<button class="primary" onclick="more()">🤬 まだある</button>
+<button class="secondary" onclick="goUrgent()">😮‍💨 ちょっとマシ</button>
+</div></section>
+
+<section class="screen" id="s5">
+<div class="card">
+<h2>これ、今夜なんとかせなあかん話？</h2>
+<p>ここだけ確認しよ。反省文はいりません🤣</p>
+<button class="primary" onclick="urgent(true)">ある。やること1個ある</button>
+<button class="secondary" onclick="urgent(false)">今日はもう、どうにもならん</button>
+</div></section>
+
+<section class="screen" id="s6">
+<div class="card">
+<h2>ほな、明日の自分に1個だけ。</h2>
+<input id="task" maxlength="160" placeholder="これだけやる">
+<button class="primary" onclick="saveTask()">引き継ぐ</button>
+</div></section>
+
+<section class="screen" id="s7">
+<img class="hero" src="hanseikai04.PNG">
+<div class="card">
+<h2>本日のぐるぐる、どうする？</h2>
+<p>問題そのものを無かったことにはせん。<br><strong>今夜の再放送だけ終わらせよ。</strong></p>
+<div class="trash-paper" id="paper">本日の脳内再放送</div>
+<button class="dark" id="trashBtn" onclick="trash()">🗑️ 今夜の再放送を破棄</button>
+<div class="quote center" id="trashed" style="display:none">🗑️💨<br><strong>本日の再放送、打ち切り。</strong></div>
+</div></section>
+
+<section class="screen" id="s8">
+<div class="card">
+<h2>で、さっきよりどない？</h2>
+<p>スッキリしたことにせんでええ🤣<br>今のまんま押して。</p>
+<div class="meter">
+<button class="choice" onclick="relief(0)">😫<br>0</button>
+<button class="choice" onclick="relief(1)">😐<br>1</button>
+<button class="choice" onclick="relief(2)">🙂<br>2</button>
+<button class="choice" onclick="relief(3)">😌<br>3</button>
+</div>
+<p class="small center">0＝全然　／　3＝だいぶマシ</p>
+</div></section>
+
+<section class="screen" id="s9">
+<img class="hero" src="hanseikai05.PNG">
+<div class="card center">
+<p>ガラガラガラ……</p>
+<div class="big stamp">閉 店</div>
+<div class="quote" id="finalMessage"></div>
+<div id="handoff"></div>
+<button class="dark" onclick="done()">本日の担当者、退勤する🤣</button>
+<p class="notice">これは気持ちを吐き出すためのツールで、医療・診断・治療ではありません。つらさが強い、自分を傷つけたい気持ちがある、日常生活が難しい場合は、このアプリだけで抱えず、身近な人や専門の相談先につながってください。</p>
+</div></section>
+
+</main>
+<script>
+let state={mood:"",round:1,vents:[],task:"",timer:null,time:30};
+
+function go(n){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ document.getElementById("s"+n).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function mood(m){state.mood=m;state.round=1;startVent();go(3)}
+function startVent(){
+ clearInterval(state.timer);state.time=30;
+ document.getElementById("timer").textContent="30";
+ document.getElementById("vent").value="";
+ document.getElementById("roundText").textContent=`愚痴タイム ${state.round}回目`;
+ const lines=[
+  "悪口でも愚痴でも言い訳でもええ。本日は品行方正、禁止。",
+  "ここではええ人せんでよろしい🤣",
+  "文章力いりません。「腹立つ！」だけでも営業できます。",
+  "本人には言えんやつ、ここへ置いていき。"
+ ];
+ document.getElementById("listenBubble").textContent=lines[(state.round-1)%lines.length];
+ state.timer=setInterval(()=>{
+   state.time--;
+   document.getElementById("timer").textContent=state.time>0?state.time:"好きなだけ続けてええ🤣";
+   if(state.time<=0)clearInterval(state.timer);
+ },1000);
+}
+function finishVent(){
+ let v=document.getElementById("vent").value.trim();
+ if(!v){alert("一言でもええで🤣「腹立つ！」でも営業可能。");return}
+ clearInterval(state.timer);state.vents.push(v);
+ const reactions=[
+  "うんうん。そら言いたなるわ。",
+  "はい、ちゃんと聞きました🤣",
+  "それ、頭ん中だけで回してたら疲れるやつ。",
+  "本日よう溜め込んでおられましたな🤣"
+ ];
+ document.getElementById("reaction").textContent=reactions[Math.floor(Math.random()*reactions.length)];
+ go(4);
+}
+function more(){state.round++;startVent();go(3)}
+function goUrgent(){go(5)}
+function urgent(y){if(y)go(6);else{state.task="";go(7)}}
+function saveTask(){
+ let v=document.getElementById("task").value.trim();
+ if(!v){alert("1個だけ書いてな🤣");return}
+ state.task=v;go(7);
+}
+function trash(){
+ document.getElementById("paper").classList.add("throw");
+ document.getElementById("trashBtn").style.display="none";
+ setTimeout(()=>document.getElementById("trashed").style.display="block",650);
+ setTimeout(()=>go(8),1500);
+}
+function relief(n){
+ let msg="";
+ if(n===0){
+  msg="今日はゴミ箱だけでは足らんかったな。無理に「スッキリした」で閉めんでええ。できそうなら、信頼できる人に「答えいらんからちょっと聞いて」って話すのもあり。";
+ }else if(n===1){
+  msg="まだ残ってるな。でも、さっきより1ミリでも外に出せたなら今日はそこまででええ。続きを今夜ずっとやる必要はない。";
+ }else if(n===2){
+  msg="お、ちょっとマシ。問題は残ってても、今夜のあんたの仕事はここまで🤣";
+ }else{
+  msg="よし。だいぶ出た🤣 今日の脳みそ、もう残業せんでよろしい。";
+ }
+ document.getElementById("finalMessage").textContent=msg;
+ document.getElementById("handoff").innerHTML=state.task?`<div class="summary"><strong>📮 明日の自分へ</strong><br><br>${esc(state.task)}</div>`:"";
+ state.vents=[];go(9);
+}
+function done(){alert("はい退勤🤣 おつかれさん。")}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+</script>
+</body></html>
