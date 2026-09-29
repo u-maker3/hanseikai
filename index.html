@@ -104,6 +104,11 @@ textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border
 .fullbin{animation:fullbin 1.3s .25s forwards}@keyframes fullbin{0%{transform:translateY(0) rotate(0)}30%{transform:translateY(-30px) rotate(-8deg)}100%{opacity:0;transform:translateY(85vh) rotate(30deg) scale(.08)}}
 .burst{animation:burst 1.2s forwards}@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.2)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(360deg) scale(1.7)}}
 .shakeScreen{animation:screenShake .55s ease}@keyframes screenShake{0%,100%{transform:translate(0)}20%{transform:translate(-10px,7px)}40%{transform:translate(11px,-8px)}60%{transform:translate(-8px,-4px)}80%{transform:translate(7px,8px)}}
+
+#machineIcon{animation:machinePulse .55s ease-in-out infinite alternate}
+@keyframes machinePulse{from{transform:scale(.9) rotate(-3deg)}to{transform:scale(1.12) rotate(3deg)}}
+#machineDots{animation:dotsBlink .8s steps(2,end) infinite}
+@keyframes dotsBlink{50%{opacity:.25}}
 </style>
 </head>
 <body><div class="blackout" id="blackout"></div>
@@ -122,7 +127,16 @@ textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border
 
 <section class="screen" id="s5"><div class="card"><h2>どう処理する？🤣</h2><div class="process-grid"><button class="choice" onclick="pick('fire')">🔥<br>燃やす</button><button class="choice" onclick="pick('smash')">💥<br>粉砕</button><button class="choice" onclick="pick('flush')">🚽<br>流す</button><button class="choice" onclick="pick('rocket')">🚀<br>宇宙へ</button></div></div></section>
 
-<section class="screen" id="s6"><div class="card center"><h2 id="method">処理開始。</h2><div class="fxstage"><div class="payload" id="payload"></div></div><div class="quote" id="processed" style="display:none"></div><button class="primary" id="measure" style="display:none" onclick="go(7)">処理後を測る</button></div></section>
+<section class="screen" id="s6"><div class="card center"><h2 id="method">処理開始。</h2>
+<div class="fxstage" id="miniStage">
+  <div id="machineIdle" style="text-align:center">
+    <div id="machineIcon" style="font-size:78px;line-height:1">🔥</div>
+    <div style="font-size:22px;font-weight:900;margin-top:12px">脳内ゴミ処理中</div>
+    <div style="font-size:14px;margin-top:8px;color:#7c7068">ただいま跡形もなく処分しております🤣</div>
+    <div style="font-size:32px;margin-top:12px;letter-spacing:8px" id="machineDots">● ● ●</div>
+  </div>
+  <div class="payload" id="payload"></div>
+</div><div class="quote" id="processed" style="display:none"></div><button class="primary" id="measure" style="display:none" onclick="go(7)">処理後を測る</button></div></section>
 
 <section class="screen" id="s7"><div class="card"><h2>で、今どれくらい？</h2><p>スッキリしたフリ禁止🤣</p><div class="score"><span id="an">5</span>/10</div><input class="range" id="after" type="range" min="0" max="10" value="5" oninput="an.textContent=this.value"><button class="primary" onclick="showResult()">結果を見る</button></div></section>
 
@@ -147,6 +161,12 @@ function processIt(){
 
  method.textContent=cfg[0];
  payload.textContent="";
+ const icons={fire:"🔥",smash:"💥",flush:"🚽",rocket:"🚀"};
+ const labels={fire:"焼却炉、全力稼働中",smash:"粉砕機、容赦なく稼働中",flush:"超強力で流しております",rocket:"地球外へ搬送準備中"};
+ const mi=document.getElementById("machineIcon");
+ const idle=document.getElementById("machineIdle");
+ if(mi) mi.textContent=icons[st.method]||"💥";
+ if(idle) idle.querySelector("div:nth-child(2)").textContent=labels[st.method]||"脳内ゴミ処理中";
 
  const show=document.getElementById("fxshow");
  const word=document.getElementById("fxword");
