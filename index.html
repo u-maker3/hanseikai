@@ -74,9 +74,30 @@ textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border
 .delta{font-size:36px;font-weight:1000;text-align:center;margin:12px 0}
 .blackout{position:fixed;inset:0;background:#111;color:#fff;z-index:99;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:28px;font-weight:900;line-height:1.6}
 .blackout.show{display:flex;animation:fade .3s ease}
+
+.fxshow{position:fixed;inset:0;z-index:120;background:#120f16;display:none;overflow:hidden;align-items:center;justify-content:center}
+.fxshow.on{display:flex}
+.fxword{position:relative;z-index:4;width:86%;text-align:center;font-size:clamp(34px,10vw,62px);font-weight:1000;color:white;line-height:1.2;overflow-wrap:anywhere;text-shadow:0 5px 20px #000}
+.fxemoji{position:absolute;font-size:clamp(30px,9vw,65px);z-index:5;pointer-events:none}
+.fxflash{position:absolute;inset:0;background:white;opacity:0;z-index:8;pointer-events:none}
+.fxcaption{position:absolute;bottom:10%;left:5%;right:5%;z-index:9;text-align:center;color:white;font-size:clamp(24px,7vw,38px);font-weight:1000;text-shadow:0 4px 15px #000;opacity:0}
+.flashgo{animation:flashgo .8s ease}@keyframes flashgo{0%,100%{opacity:0}20%{opacity:1}45%{opacity:.15}60%{opacity:.9}}
+.capgo{animation:capgo .7s .95s forwards}@keyframes capgo{to{opacity:1;transform:scale(1.05)}}
+.fullfire{animation:fullfire 1.5s .2s forwards}@keyframes fullfire{0%{transform:scale(1)}35%{transform:scale(1.2);color:#fff}65%{transform:scale(.85) rotate(-5deg);filter:blur(1px)}100%{opacity:0;transform:scale(.05) translateY(500px) rotate(25deg);filter:blur(15px)}}
+.fullsmash{animation:fullsmash 1.15s .25s forwards}@keyframes fullsmash{0%{transform:scale(1)}25%{transform:scale(1.35) rotate(-6deg)}45%{transform:scale(.7) rotate(7deg)}65%{transform:scale(1.8) rotate(-12deg)}100%{opacity:0;transform:scale(4) rotate(35deg);filter:blur(18px)}}
+.fullflush{animation:fullflush 1.7s .15s forwards}@keyframes fullflush{0%{transform:rotate(0) scale(1)}55%{transform:rotate(540deg) scale(.65)}100%{opacity:0;transform:rotate(1440deg) scale(.01) translateY(900px)}}
+.fullrocket{animation:fullrocket 1.4s .25s forwards}@keyframes fullrocket{0%{transform:translateY(0) scale(1)}25%{transform:translateY(35px) scale(1.05)}100%{opacity:0;transform:translateY(-110vh) scale(.15) rotate(12deg)}}
+.fullbin{animation:fullbin 1.3s .25s forwards}@keyframes fullbin{0%{transform:translateY(0) rotate(0)}30%{transform:translateY(-30px) rotate(-8deg)}100%{opacity:0;transform:translateY(85vh) rotate(30deg) scale(.08)}}
+.burst{animation:burst 1.2s forwards}@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.2)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(360deg) scale(1.7)}}
+.shakeScreen{animation:screenShake .55s ease}@keyframes screenShake{0%,100%{transform:translate(0)}20%{transform:translate(-10px,7px)}40%{transform:translate(11px,-8px)}60%{transform:translate(-8px,-4px)}80%{transform:translate(7px,8px)}}
 </style>
 </head>
-<body><div class="blackout" id="blackout"></div><main class="app">
+<body><div class="blackout" id="blackout"></div>
+<div class="fxshow" id="fxshow">
+  <div class="fxflash" id="fxflash"></div>
+  <div class="fxword" id="fxword"></div>
+  <div class="fxcaption" id="fxcaption"></div>
+</div><main class="app">
 <section class="screen active" id="s1"><img class="hero" src="hanseikai01.PNG"><div class="card center"><h1>反省会、閉店。</h1><p>今日は解決ちゃう。<br><strong>頭ん中に居座ってるやつを外へ出す🤣</strong></p><button class="primary" onclick="go(2)">脳内ゴミ処理場へ</button><p class="notice">入力内容は保存しません。</p></div></section>
 
 <section class="screen" id="s2"><img class="hero" src="hanseikai02.PNG"><div class="card"><h2>まず全部吐け。</h2><p>愚痴・言い訳・悪口・後悔。品行方正、禁止🤣</p><textarea id="vent" maxlength="3000" placeholder="ほんまな！！！"></textarea><button class="primary" onclick="saveVent()">吐いた</button></div></section>
@@ -101,7 +122,56 @@ function go(n){document.querySelectorAll(".screen").forEach(x=>x.classList.remov
 function saveVent(){let v=vent.value.trim();if(!v){alert("一言でもええ🤣");return}st.vent=v;go(3)}
 function shout(){let v=word.value.trim();if(!v){alert("最後の一言、言うたれ🤣");return}st.word=v;shoutbox.textContent=v;shoutbox.classList.remove("boom");void shoutbox.offsetWidth;shoutbox.classList.add("boom");next.style.display="block"}
 function pick(m){st.method=m;go(6);setTimeout(processIt,300)}
-function processIt(){let cfg={fire:["🔥 焼却処分","燃えました。灰まで追いかけんでよろしい🤣"],smash:["💥 粉砕処分","粉々です。復元作業は禁止🤣"],flush:["🚽 水に流す","流れました。追いかけんでよろしい🤣"],rocket:["🚀 地球外追放","行きました。だいぶ遠くへ🤣"],binfx:["🗑️ 通常廃棄","穏便に処分しました🤣"]}[st.method];method.textContent=cfg[0];payload.textContent=st.word;setTimeout(()=>payload.classList.add(st.method),250);setTimeout(()=>{processed.textContent=cfg[1];processed.style.display="block";measure.style.display="block"},1600)}
+function processIt(){
+ let cfg={
+  fire:["🔥 焼却処分","🔥","fullfire","🔥🔥🔥 焼却完了。灰まで追いかけんでよろしい。"],
+  smash:["💥 粉砕処分","💥","fullsmash","💥💥💥 粉砕完了。復元作業は禁止。"],
+  flush:["🚽 水に流す","🌀","fullflush","🚽🌀 流れました。追跡禁止。"],
+  rocket:["🚀 地球外追放","🚀","fullrocket","🚀✨ 地球圏外へ追放しました。"],
+  binfx:["🗑️ 通常廃棄","🗑️","fullbin","🗑️💨 廃棄完了。本日の回収は終了。"]
+ }[st.method];
+
+ method.textContent=cfg[0];
+ payload.textContent="まもなくド派手に処分します🤣";
+
+ const show=document.getElementById("fxshow");
+ const word=document.getElementById("fxword");
+ const flash=document.getElementById("fxflash");
+ const cap=document.getElementById("fxcaption");
+
+ setTimeout(()=>{
+   show.classList.add("on","shakeScreen");
+   word.textContent=st.word;
+   word.className="fxword "+cfg[2];
+   cap.textContent=cfg[3];
+   cap.className="fxcaption";
+   flash.className="fxflash flashgo";
+
+   for(let i=0;i<26;i++){
+     let e=document.createElement("span");
+     e.className="fxemoji burst";
+     e.textContent=cfg[1];
+     e.style.left=(42+Math.random()*16)+"%";
+     e.style.top=(42+Math.random()*16)+"%";
+     e.style.setProperty("--x",(-260+Math.random()*520)+"px");
+     e.style.setProperty("--y",(-430+Math.random()*700)+"px");
+     show.appendChild(e);
+     setTimeout(()=>e.remove(),1400);
+   }
+   setTimeout(()=>cap.classList.add("capgo"),900);
+ },450);
+
+ setTimeout(()=>{
+   show.classList.remove("shakeScreen");
+   show.classList.remove("on");
+   word.className="fxword";
+   flash.className="fxflash";
+   cap.className="fxcaption";
+   processed.textContent=cfg[3]+" 🤣";
+   processed.style.display="block";
+   measure.style.display="block";
+ },2600);
+}
 function showResult(){st.after=+after.value;let c=st.before-st.after;if(c>0){delta.textContent="モヤモヤ −"+c;result.textContent=c>=5?"おお🤣 だいぶ下がった。問題は残ってても、今夜背負う量は減った。":c>=2?"ちゃんと軽なっとる🤣 今日はこの分だけでも上出来。":"1ミリ動いた。それでええ。ゼロまで持っていかんでよろしい。"}else if(c===0){delta.textContent="変化 0";result.textContent="効いてへんやないか🤣 これは『捨てろ』だけで済む案件ちゃうみたい。誰かに『答えいらんから聞いて』って話すのもあり。"}else{delta.textContent="モヤモヤ ＋"+Math.abs(c);result.textContent="増えとる🤣 今日は掘ったことで余計気になったみたい。ひとり会議は延長せず、一旦離れよ。"}go(8)}
 function closeShop(){let t=task.value.trim();blackout.innerHTML="……はい。<br><br>今の件、<br>本日の営業時間外です。";blackout.classList.add("show");setTimeout(()=>{blackout.classList.remove("show");final.textContent=st.after<=3?"今夜の脳みそ、もう残業せんでよろしい🤣":"全部片付いてなくても、今日はここまで。";handoff.innerHTML=t?'<div class="summary"><strong>📮 明日の自分へ</strong><br><br>'+esc(t)+'</div>':"";st.vent="";go(9)},1500)}
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
