@@ -56,175 +56,53 @@ textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border
   padding:14px 16px;margin:12px 0;font-weight:700;line-height:1.7
 }
 .counter{text-align:center;font-size:13px;color:var(--sub);margin:8px 0}
+
+.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.process-grid button{margin:0;text-align:center}
+.shout{font-size:clamp(28px,9vw,46px);font-weight:1000;text-align:center;line-height:1.25;margin:20px 0;overflow-wrap:anywhere}
+.shout.boom{animation:boom .65s cubic-bezier(.15,.85,.2,1)}
+@keyframes boom{0%{opacity:0;transform:scale(.2) rotate(-8deg)}65%{opacity:1;transform:scale(1.22) rotate(3deg)}100%{transform:scale(1)}}
+.fxstage{min-height:240px;position:relative;overflow:hidden;border:2px dashed #e7d5c7;border-radius:22px;background:#fffaf4;display:flex;align-items:center;justify-content:center;padding:20px;margin:14px 0}
+.payload{font-size:25px;font-weight:1000;text-align:center;overflow-wrap:anywhere}
+.fire{animation:burn 1.4s forwards}@keyframes burn{to{opacity:0;transform:scale(.1) translateY(180px);filter:blur(8px)}}
+.smash{animation:smash 1s forwards}@keyframes smash{40%{transform:scale(1.4) rotate(-8deg)}to{opacity:0;transform:scale(3) rotate(30deg);filter:blur(10px)}}
+.flush{animation:flush 1.4s forwards}@keyframes flush{to{opacity:0;transform:rotate(900deg) scale(.03) translateY(600px)}}
+.rocket{animation:rocket 1.2s forwards}@keyframes rocket{to{opacity:0;transform:translateY(-600px) scale(.3) rotate(10deg)}}
+.binfx{animation:binfx 1.1s forwards}@keyframes binfx{to{opacity:0;transform:translateY(260px) scale(.1) rotate(20deg)}}
+.score{font-size:42px;font-weight:1000;text-align:center;color:var(--brown)}
+.range{width:100%;accent-color:var(--pink)}
+.delta{font-size:36px;font-weight:1000;text-align:center;margin:12px 0}
+.blackout{position:fixed;inset:0;background:#111;color:#fff;z-index:99;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:28px;font-weight:900;line-height:1.6}
+.blackout.show{display:flex;animation:fade .3s ease}
 </style>
 </head>
-<body><main class="app">
+<body><div class="blackout" id="blackout"></div><main class="app">
+<section class="screen active" id="s1"><img class="hero" src="hanseikai01.PNG"><div class="card center"><h1>反省会、閉店。</h1><p>今日は解決ちゃう。<br><strong>頭ん中に居座ってるやつを外へ出す🤣</strong></p><button class="primary" onclick="go(2)">脳内ゴミ処理場へ</button><p class="notice">入力内容は保存しません。</p></div></section>
 
-<section class="screen active" id="s1">
-<img class="hero" src="hanseikai01.PNG">
-<div class="card center">
-<div class="small">🧠 本日の脳内会議所</div>
-<h1>反省会、閉店。</h1>
-<p>誰かに話したい。<br>でも誰に話したらええねん。</p>
-<p><strong>ほな、ここで吐いていき。</strong></p>
-<p>今日は分析せん。説教せん。<br>とりあえず聞く🤣</p>
-<button class="primary" onclick="go(2)">ちょっと聞いて</button>
-<p class="notice">入力内容は保存しません。ページを閉じる・再読み込みすると消えます。</p>
-</div></section>
+<section class="screen" id="s2"><img class="hero" src="hanseikai02.PNG"><div class="card"><h2>まず全部吐け。</h2><p>愚痴・言い訳・悪口・後悔。品行方正、禁止🤣</p><textarea id="vent" maxlength="3000" placeholder="ほんまな！！！"></textarea><button class="primary" onclick="saveVent()">吐いた</button></div></section>
 
-<section class="screen" id="s2">
-<img class="hero" src="hanseikai02.PNG">
-<div class="card">
-<h2>今どんな感じ？</h2>
-<p>説明せんでええ。近いやつ押して。</p>
-<button class="choice" onclick="mood('😡 腹立つ')">😡 腹立つ</button>
-<button class="choice" onclick="mood('😭 悲しい')">😭 悲しい</button>
-<button class="choice" onclick="mood('😰 不安')">😰 不安</button>
-<button class="choice" onclick="mood('😣 やらかした')">😣 やらかした</button>
-<button class="choice" onclick="mood('😵 ごちゃごちゃ')">😵 ごちゃごちゃ</button>
-<button class="choice" onclick="mood('🤬 知らん！全部！')">🤬 知らん！全部！</button>
-</div></section>
+<section class="screen" id="s3"><div class="card"><h2>処理前、どれくらいモヤってる？</h2><div class="score"><span id="bn">5</span>/10</div><input class="range" id="before" type="range" min="0" max="10" value="5" oninput="bn.textContent=this.value"><p class="small center">0＝平気 ／ 10＝頭から離れへん</p><button class="primary" onclick="st.before=+before.value;go(4)">これくらい</button></div></section>
 
-<section class="screen" id="s3">
-<img class="hero" src="hanseikai02.PNG">
-<div class="card">
-<h2>ほな30秒、全部言え🤣</h2>
-<div class="bubble" id="listenBubble">悪口でも愚痴でも言い訳でもええ。<br>本日は品行方正、禁止。</div>
-<div class="timer" id="timer">30</div>
-<textarea id="vent" maxlength="3000" placeholder="ほんまな！！！"></textarea>
-<button class="primary" onclick="finishVent()">吐いた</button>
-<div class="counter" id="roundText">愚痴タイム 1回目</div>
-</div></section>
+<section class="screen" id="s4"><img class="hero" src="hanseikai03.PNG"><div class="card"><h2>最後に一言、言うたれ。</h2><p>本人に送るんちゃうで🤣 ここでだけ叫ぶ。</p><input id="word" type="text" maxlength="120" placeholder="もう知らん！！！"><button class="dark" onclick="shout()">言うたれーーー！</button><div class="shout" id="shoutbox"></div><button class="primary" id="next" style="display:none" onclick="go(5)">よし、処理する</button></div></section>
 
-<section class="screen" id="s4">
-<img class="hero" src="hanseikai03.PNG">
-<div class="card center">
-<h2>……まだある？🤣</h2>
-<div class="bubble" id="reaction"></div>
-<button class="primary" onclick="more()">🤬 まだある</button>
-<button class="secondary" onclick="goUrgent()">😮‍💨 ちょっとマシ</button>
-</div></section>
+<section class="screen" id="s5"><div class="card"><h2>どう処理する？🤣</h2><div class="process-grid"><button class="choice" onclick="pick('fire')">🔥 燃やす</button><button class="choice" onclick="pick('smash')">💥 粉砕</button><button class="choice" onclick="pick('flush')">🚽 流す</button><button class="choice" onclick="pick('rocket')">🚀 宇宙へ</button><button class="choice" onclick="pick('binfx')" style="grid-column:1/3">🗑️ 普通に捨てる</button></div></div></section>
 
-<section class="screen" id="s5">
-<div class="card">
-<h2>これ、今夜なんとかせなあかん話？</h2>
-<p>ここだけ確認しよ。反省文はいりません🤣</p>
-<button class="primary" onclick="urgent(true)">ある。やること1個ある</button>
-<button class="secondary" onclick="urgent(false)">今日はもう、どうにもならん</button>
-</div></section>
+<section class="screen" id="s6"><div class="card center"><h2 id="method">処理開始。</h2><div class="fxstage"><div class="payload" id="payload"></div></div><div class="quote" id="processed" style="display:none"></div><button class="primary" id="measure" style="display:none" onclick="go(7)">処理後を測る</button></div></section>
 
-<section class="screen" id="s6">
-<div class="card">
-<h2>ほな、明日の自分に1個だけ。</h2>
-<input id="task" maxlength="160" placeholder="これだけやる">
-<button class="primary" onclick="saveTask()">引き継ぐ</button>
-</div></section>
+<section class="screen" id="s7"><div class="card"><h2>で、今どれくらい？</h2><p>スッキリしたフリ禁止🤣</p><div class="score"><span id="an">5</span>/10</div><input class="range" id="after" type="range" min="0" max="10" value="5" oninput="an.textContent=this.value"><button class="primary" onclick="showResult()">結果を見る</button></div></section>
 
-<section class="screen" id="s7">
-<img class="hero" src="hanseikai04.PNG">
-<div class="card">
-<h2>本日のぐるぐる、どうする？</h2>
-<p>問題そのものを無かったことにはせん。<br><strong>今夜の再放送だけ終わらせよ。</strong></p>
-<div class="trash-paper" id="paper">本日の脳内再放送</div>
-<button class="dark" id="trashBtn" onclick="trash()">🗑️ 今夜の再放送を破棄</button>
-<div class="quote center" id="trashed" style="display:none">🗑️💨<br><strong>本日の再放送、打ち切り。</strong></div>
-</div></section>
+<section class="screen" id="s8"><img class="hero" src="hanseikai05.PNG"><div class="card center"><div class="delta" id="delta"></div><div class="quote" id="result"></div><p><strong>明日の自分に引き継ぐことある？</strong></p><input id="task" type="text" maxlength="160" placeholder="なければ空欄でOK"><button class="dark" onclick="closeShop()">本日の会議を閉める</button></div></section>
 
-<section class="screen" id="s8">
-<div class="card">
-<h2>で、さっきよりどない？</h2>
-<p>スッキリしたことにせんでええ🤣<br>今のまんま押して。</p>
-<div class="meter">
-<button class="choice" onclick="relief(0)">😫<br>0</button>
-<button class="choice" onclick="relief(1)">😐<br>1</button>
-<button class="choice" onclick="relief(2)">🙂<br>2</button>
-<button class="choice" onclick="relief(3)">😌<br>3</button>
-</div>
-<p class="small center">0＝全然　／　3＝だいぶマシ</p>
-</div></section>
-
-<section class="screen" id="s9">
-<img class="hero" src="hanseikai05.PNG">
-<div class="card center">
-<p>ガラガラガラ……</p>
-<div class="big stamp">閉 店</div>
-<div class="quote" id="finalMessage"></div>
-<div id="handoff"></div>
-<button class="dark" onclick="done()">本日の担当者、退勤する🤣</button>
-<p class="notice">これは気持ちを吐き出すためのツールで、医療・診断・治療ではありません。つらさが強い、自分を傷つけたい気持ちがある、日常生活が難しい場合は、このアプリだけで抱えず、身近な人や専門の相談先につながってください。</p>
-</div></section>
-
+<section class="screen" id="s9"><img class="hero" src="hanseikai05.PNG"><div class="card center"><p>ガラガラガラ……</p><div class="big stamp">閉 店</div><div class="quote" id="final"></div><div id="handoff"></div><button class="dark" onclick="alert('はい退勤🤣 おつかれさん。')">本日の担当者、退勤する🤣</button><p class="notice">これは気持ちを吐き出すためのツールで、医療・診断・治療ではありません。つらさが強い、自分を傷つけたい気持ちがある、日常生活が難しい場合は、このアプリだけで抱えず、身近な人や専門の相談先につながってください。</p></div></section>
 </main>
 <script>
-let state={mood:"",round:1,vents:[],task:"",timer:null,time:30};
-
-function go(n){
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
- document.getElementById("s"+n).classList.add("active");
- window.scrollTo({top:0,behavior:"smooth"});
-}
-function mood(m){state.mood=m;state.round=1;startVent();go(3)}
-function startVent(){
- clearInterval(state.timer);state.time=30;
- document.getElementById("timer").textContent="30";
- document.getElementById("vent").value="";
- document.getElementById("roundText").textContent=`愚痴タイム ${state.round}回目`;
- const lines=[
-  "悪口でも愚痴でも言い訳でもええ。本日は品行方正、禁止。",
-  "ここではええ人せんでよろしい🤣",
-  "文章力いりません。「腹立つ！」だけでも営業できます。",
-  "本人には言えんやつ、ここへ置いていき。"
- ];
- document.getElementById("listenBubble").textContent=lines[(state.round-1)%lines.length];
- state.timer=setInterval(()=>{
-   state.time--;
-   document.getElementById("timer").textContent=state.time>0?state.time:"好きなだけ続けてええ🤣";
-   if(state.time<=0)clearInterval(state.timer);
- },1000);
-}
-function finishVent(){
- let v=document.getElementById("vent").value.trim();
- if(!v){alert("一言でもええで🤣「腹立つ！」でも営業可能。");return}
- clearInterval(state.timer);state.vents.push(v);
- const reactions=[
-  "うんうん。そら言いたなるわ。",
-  "はい、ちゃんと聞きました🤣",
-  "それ、頭ん中だけで回してたら疲れるやつ。",
-  "本日よう溜め込んでおられましたな🤣"
- ];
- document.getElementById("reaction").textContent=reactions[Math.floor(Math.random()*reactions.length)];
- go(4);
-}
-function more(){state.round++;startVent();go(3)}
-function goUrgent(){go(5)}
-function urgent(y){if(y)go(6);else{state.task="";go(7)}}
-function saveTask(){
- let v=document.getElementById("task").value.trim();
- if(!v){alert("1個だけ書いてな🤣");return}
- state.task=v;go(7);
-}
-function trash(){
- document.getElementById("paper").classList.add("throw");
- document.getElementById("trashBtn").style.display="none";
- setTimeout(()=>document.getElementById("trashed").style.display="block",650);
- setTimeout(()=>go(8),1500);
-}
-function relief(n){
- let msg="";
- if(n===0){
-  msg="今日はゴミ箱だけでは足らんかったな。無理に「スッキリした」で閉めんでええ。できそうなら、信頼できる人に「答えいらんからちょっと聞いて」って話すのもあり。";
- }else if(n===1){
-  msg="まだ残ってるな。でも、さっきより1ミリでも外に出せたなら今日はそこまででええ。続きを今夜ずっとやる必要はない。";
- }else if(n===2){
-  msg="お、ちょっとマシ。問題は残ってても、今夜のあんたの仕事はここまで🤣";
- }else{
-  msg="よし。だいぶ出た🤣 今日の脳みそ、もう残業せんでよろしい。";
- }
- document.getElementById("finalMessage").textContent=msg;
- document.getElementById("handoff").innerHTML=state.task?`<div class="summary"><strong>📮 明日の自分へ</strong><br><br>${esc(state.task)}</div>`:"";
- state.vents=[];go(9);
-}
-function done(){alert("はい退勤🤣 おつかれさん。")}
+let st={vent:"",word:"",before:5,after:5,method:""};
+function go(n){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById("s"+n).classList.add("active");scrollTo({top:0,behavior:"smooth"})}
+function saveVent(){let v=vent.value.trim();if(!v){alert("一言でもええ🤣");return}st.vent=v;go(3)}
+function shout(){let v=word.value.trim();if(!v){alert("最後の一言、言うたれ🤣");return}st.word=v;shoutbox.textContent=v;shoutbox.classList.remove("boom");void shoutbox.offsetWidth;shoutbox.classList.add("boom");next.style.display="block"}
+function pick(m){st.method=m;go(6);setTimeout(processIt,300)}
+function processIt(){let cfg={fire:["🔥 焼却処分","燃えました。灰まで追いかけんでよろしい🤣"],smash:["💥 粉砕処分","粉々です。復元作業は禁止🤣"],flush:["🚽 水に流す","流れました。追いかけんでよろしい🤣"],rocket:["🚀 地球外追放","行きました。だいぶ遠くへ🤣"],binfx:["🗑️ 通常廃棄","穏便に処分しました🤣"]}[st.method];method.textContent=cfg[0];payload.textContent=st.word;setTimeout(()=>payload.classList.add(st.method),250);setTimeout(()=>{processed.textContent=cfg[1];processed.style.display="block";measure.style.display="block"},1600)}
+function showResult(){st.after=+after.value;let c=st.before-st.after;if(c>0){delta.textContent="モヤモヤ −"+c;result.textContent=c>=5?"おお🤣 だいぶ下がった。問題は残ってても、今夜背負う量は減った。":c>=2?"ちゃんと軽なっとる🤣 今日はこの分だけでも上出来。":"1ミリ動いた。それでええ。ゼロまで持っていかんでよろしい。"}else if(c===0){delta.textContent="変化 0";result.textContent="効いてへんやないか🤣 これは『捨てろ』だけで済む案件ちゃうみたい。誰かに『答えいらんから聞いて』って話すのもあり。"}else{delta.textContent="モヤモヤ ＋"+Math.abs(c);result.textContent="増えとる🤣 今日は掘ったことで余計気になったみたい。ひとり会議は延長せず、一旦離れよ。"}go(8)}
+function closeShop(){let t=task.value.trim();blackout.innerHTML="……はい。<br><br>今の件、<br>本日の営業時間外です。";blackout.classList.add("show");setTimeout(()=>{blackout.classList.remove("show");final.textContent=st.after<=3?"今夜の脳みそ、もう残業せんでよろしい🤣":"全部片付いてなくても、今日はここまで。";handoff.innerHTML=t?'<div class="summary"><strong>📮 明日の自分へ</strong><br><br>'+esc(t)+'</div>':"";st.vent="";go(9)},1500)}
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-</script>
-</body></html>
+</script></body></html>
