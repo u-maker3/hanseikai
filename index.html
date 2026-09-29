@@ -57,8 +57,22 @@ textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border
 }
 .counter{text-align:center;font-size:13px;color:var(--sub);margin:8px 0}
 
-.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-.process-grid button{margin:0;text-align:center}
+.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.process-grid button{
+  margin:0;
+  text-align:center;
+  min-height:112px;
+  padding:18px 8px;
+  font-size:21px;
+  line-height:1.45;
+  border-radius:24px;
+  box-shadow:0 8px 18px rgba(90,60,45,.10);
+}
+.process-grid button::first-line{font-size:34px}
+.process-grid button:active{transform:scale(.94)}
+@media(max-width:380px){
+  .process-grid button{min-height:100px;font-size:19px}
+}
 .shout{font-size:clamp(28px,9vw,46px);font-weight:1000;text-align:center;line-height:1.25;margin:20px 0;overflow-wrap:anywhere}
 .shout.boom{animation:boom .65s cubic-bezier(.15,.85,.2,1)}
 @keyframes boom{0%{opacity:0;transform:scale(.2) rotate(-8deg)}65%{opacity:1;transform:scale(1.22) rotate(3deg)}100%{transform:scale(1)}}
@@ -106,7 +120,7 @@ textarea,input{width:100%;border:2px solid var(--line);background:#fffdfb;border
 
 <section class="screen" id="s4"><img class="hero" src="hanseikai03.PNG"><div class="card"><h2>最後に一言、言うたれ。</h2><p>本人に送るんちゃうで🤣 ここでだけ叫ぶ。</p><input id="word" type="text" maxlength="120" placeholder="もう知らん！！！"><button class="dark" onclick="shout()">言うたれーーー！</button><div class="shout" id="shoutbox"></div><button class="primary" id="next" style="display:none" onclick="go(5)">よし、処理する</button></div></section>
 
-<section class="screen" id="s5"><div class="card"><h2>どう処理する？🤣</h2><div class="process-grid"><button class="choice" onclick="pick('fire')">🔥 燃やす</button><button class="choice" onclick="pick('smash')">💥 粉砕</button><button class="choice" onclick="pick('flush')">🚽 流す</button><button class="choice" onclick="pick('rocket')">🚀 宇宙へ</button><button class="choice" onclick="pick('binfx')" style="grid-column:1/3">🗑️ 普通に捨てる</button></div></div></section>
+<section class="screen" id="s5"><div class="card"><h2>どう処理する？🤣</h2><div class="process-grid"><button class="choice" onclick="pick('fire')">🔥<br>燃やす</button><button class="choice" onclick="pick('smash')">💥<br>粉砕</button><button class="choice" onclick="pick('flush')">🚽<br>流す</button><button class="choice" onclick="pick('rocket')">🚀<br>宇宙へ</button></div></div></section>
 
 <section class="screen" id="s6"><div class="card center"><h2 id="method">処理開始。</h2><div class="fxstage"><div class="payload" id="payload"></div></div><div class="quote" id="processed" style="display:none"></div><button class="primary" id="measure" style="display:none" onclick="go(7)">処理後を測る</button></div></section>
 
@@ -132,7 +146,7 @@ function processIt(){
  }[st.method];
 
  method.textContent=cfg[0];
- payload.textContent="まもなくド派手に処分します🤣";
+ payload.textContent="";
 
  const show=document.getElementById("fxshow");
  const word=document.getElementById("fxword");
